@@ -1,0 +1,58 @@
+-- Pet Simulator 1 — delete all pets WITHOUT confirmation.
+-- Running this immediately submits the MultiDelete request.
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+assert(game.PlaceId == 1599679393, "Wrong game; stopping.")
+assert(player, "Run this on the client.")
+
+local playerGui = player:WaitForChild("PlayerGui")
+local Library = require(playerGui:WaitForChild("Library"))
+
+local deadline = os.clock() + 20
+repeat
+    task.wait()
+until (Library.Loaded and Library.Stats.Cache ~= nil)
+    or os.clock() >= deadline
+
+assert(
+    Library.Loaded and Library.Stats.Cache ~= nil,
+    "Game data did not load; stopping."
+)
+
+local stats = Library.Stats.Get(true)
+assert(
+    stats and stats.Save and type(stats.Save.Pets) == "table",
+    "Could not read inventory; stopping."
+)
+
+local ids = {}
+local seen = {}
+
+for _, pet in ipairs(stats.Save.Pets) do
+    local id = tonumber(pet.id)
+    assert(id, "Unexpected pet ID; stopping before sending.")
+
+    if not seen[id] then
+        seen[id] = true
+        ids[#ids + 1] = id
+    end
+end
+
+if #ids == 0 then
+    print("No pets to delete.")
+    return
+end
+
+local ok, result = pcall(function()
+    return Library.Remotes.Inventory:InvokeServer("MultiDelete", ids)
+end)
+
+if ok then
+    print("Delete-all request returned for " .. #ids .. " pets.")
+    print("Server response:", result)
+else
+    warn("Request errored: " .. tostring(result))
+    warn("Check your inventory before retrying; deletion status is unknown.")
+end
