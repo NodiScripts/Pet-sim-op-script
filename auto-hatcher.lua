@@ -1,5 +1,5 @@
 -- Nodi scripts: auto hatcher
-local Config = {Delay = 0.0001, BatchSize = 8, RequestTimeout = 15, VerifyTimeout = 6}
+local Config = {Delay = 0.01, BatchSize = 8, RequestTimeout = 15, VerifyTimeout = 6}
 local env = getgenv()
 local previous = {}
 for _,key in ipairs({'PetAutoHatch','PetHatchUI','SelectorAutoHatch','CombinedPetHatcher'}) do
