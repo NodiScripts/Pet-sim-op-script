@@ -1,5 +1,5 @@
 -- Nodi scripts: auto hatcher
-local Config = {Delay = 0.0001, BatchSize = 20, RequestTimeout = 15, VerifyTimeout = 6}
+local Config = {Delay = 0.0001, BatchSize = 8, RequestTimeout = 15, VerifyTimeout = 6}
 local env = getgenv()
 local previous = {}
 for _,key in ipairs({'PetAutoHatch','PetHatchUI','SelectorAutoHatch','CombinedPetHatcher'}) do
@@ -422,7 +422,7 @@ local function initialize()
         end)
     end)
     render()
-    say('Choose an egg and KEEP pets. Up to 20 purchases per batch.')
+    say('Choose an egg and KEEP pets. Up to 8 purchases per batch.')
 end
 local ok,err=pcall(initialize)
 if not ok then say('Setup error: '..tostring(err)) end
